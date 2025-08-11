@@ -4,7 +4,8 @@
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QObject>
-#include <QQuickItem>
+#include <QKeyEvent>
+//#include <QQuickItem>
 #include <QSharedDataPointer>
 #include <QWidget>
 
