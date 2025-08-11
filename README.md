@@ -10,6 +10,7 @@ written for linux, should run also on Windows and MacOS<br/>
 - sqlite 3.49.100 (best compile from source)
 - Qt6 (best manual install)
 
+## build it:
         mkdir build
         cd build
         /opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
