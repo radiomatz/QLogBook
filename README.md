@@ -12,7 +12,7 @@ written for linux, should run also on Windows and MacOS<br/>
 
         mkdir build
         cd build
-	/opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
+        /opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
         make
 
 ## Questions: dm2hr@hmro.de
