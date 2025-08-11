@@ -8,11 +8,11 @@ written for linux, should run also on Windows and MacOS<br/>
 
 ## requirements:
 - sqlite 3.49.100 (best compile from source)
-- Qt6 (manual install)
+- Qt6 (best manual install)
 
         mkdir build
         cd build
-        qmake ../qlogbook.pro
+	/opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
         make
 
 ## Questions: dm2hr@hmro.de
