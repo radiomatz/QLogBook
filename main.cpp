@@ -80,6 +80,5 @@ char *fnimport = "";
 
     generate_qsolist(&w);
 
-
     return a.exec();
 }

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "settings.h"
+#include "cabrilloheader.h"
 
 #include "QLogBook.h"
 #include <QFileDialog>
@@ -40,7 +41,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     thread->start();
     connect(ui->qsodView->itemDelegate(), SIGNAL(closeEditor(QWidget*, QAbstractItemDelegate::EndEditHint)), SLOT(fieldChanged()));
+
+    ui->qsoView->installEventFilter(this);
+
 }
+
 
 MainWindow::~MainWindow() {
     worker->quit(); // Hamblib
@@ -66,9 +71,10 @@ void MainWindow::sigfreq(long f) {
 }
 
 void MainWindow::showmode(QString m) {
-    if ( m.startsWith("RPRT ") )
+    if ( m.startsWith("RPRT") )
         return;
-// why this? only automatic setted modes should be overwritten automatic
+
+// why this? because only automatic setted modes should be overwritten automatic
     if (
         ui->cmode->currentText() == "FM" ||
         ui->cmode->currentText() == "AM" ||
@@ -81,7 +87,10 @@ void MainWindow::showmode(QString m) {
 }
 
 void MainWindow::sigmode(QString m) {
-    // why this? only automatic setted modes should be overwritten automatic
+    if ( m.startsWith("RPRT"))
+        return; // got error from XMT
+
+    // why this? because only automatic setted modes should be overwritten automatic
     submode = m.remove("\n");
     if ( submode.startsWith("FM") )
         showmode("FM");
@@ -100,21 +109,34 @@ void MainWindow::sigmode(QString m) {
 
 
 void MainWindow::on_qsoView_clicked(const QModelIndex &index) {
-    int row = index.row();
-    int qsonr = 0;
-
-    qsonr = mtv->index(row,0).data().toInt();
+    int qsonr = mtv->index(index.row(), 0).data().toInt();
     generate_qsodetaillist(this, qsonr);
-
-}
-void MainWindow::on_qsoView_pressed(const QModelIndex &index) {
-    on_qsoView_clicked(index);
 }
 void MainWindow::on_qsoView_activated(const QModelIndex &index) {
     on_qsoView_clicked(index);
 }
-
-
+bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
+    // TODO: make QSqlTableView do this itself!
+    if (watched == ui->qsoView && event->type() == QEvent::KeyPress) {
+        QKeyEvent *kev = static_cast<QKeyEvent*>(event);
+        if ( kev->key() == Qt::Key_Down || kev->key() == Qt::Key_Up ) {
+            int row = ui->qsoView->currentIndex().row();
+            if ( kev->key() == Qt::Key_Down ) {
+                if ( row < ( mtv->rowCount() - 1 ) )
+                    row++;
+            }
+            if ( kev->key() == Qt::Key_Up ) {
+                if ( row > 0 )
+                    row--;
+            }
+            mtv->selectRow(row);
+            int qsonr = mtv->index(row, 0).data().toInt();
+            generate_qsodetaillist(this, qsonr);
+            qDebug() << "row:" << row << "cnt:" << mtv->rowCount();
+        }
+    }
+    return false;
+}
 
 
 
@@ -239,6 +261,7 @@ void MainWindow::on_actionSettings_triggered() {
     conf->show();
 }
 
+
 void MainWindow::on_actionImport_ADIF_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     "Open File", "$HOME/", "Adif Files (*.adi *.adif)");
@@ -266,3 +289,40 @@ void MainWindow::on_actionExport_ADIF_triggered() {
 
     return;
 }
+
+
+
+void MainWindow::on_actionExport_CABRILLO_triggered() {
+
+    QItemSelectionModel *select = uip->qsoView->selectionModel();
+    if ( !select->hasSelection() ) {
+        QMessageBox msgBox(QMessageBox::Critical, "No Range", "Nothing to Export selected", QMessageBox::Abort);
+        msgBox.exec();
+        return;
+    }
+
+    cabrilloheader *ch = new cabrilloheader();
+    cabrillo_restorefromconfig(ch);
+    if ( ch->exec() != QDialog::Accepted )
+        return;
+    cabrillo_savetoconfig(ch);
+
+
+    QDateTime local(QDateTime::currentDateTime());
+    QDateTime UTC(local.toUTC());
+
+    QString dt = UTC.toString("yyyyMMdd"); // .toString("yyyy-MM-dd hh:mm:ss");
+    QString tm = UTC.toString("hhmmss");
+    QString fname(exportpath + QDir::separator() + "export-"  + dt + "-" + tm + ".cbr");
+
+    QFile fi(fname);
+
+    if ( export_cabrillo(&fi, ch) ) {
+        QMessageBox msgBox(QMessageBox::Information, "Export Cabrillo", QString("Cabrillo exported to: ") + fname, QMessageBox::Ok);
+        msgBox.exec();
+    }
+
+    return;
+
+}
+

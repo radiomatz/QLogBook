@@ -2234,11 +2234,17 @@
           <height>10</height>
          </size>
         </property>
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string notr="true"/>
+        </property>
         <property name="sizeAdjustPolicy">
          <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
         </property>
         <property name="editTriggers">
-         <set>QAbstractItemView::EditTrigger::CurrentChanged|QAbstractItemView::EditTrigger::SelectedClicked</set>
+         <set>QAbstractItemView::EditTrigger::AnyKeyPressed|QAbstractItemView::EditTrigger::CurrentChanged|QAbstractItemView::EditTrigger::SelectedClicked</set>
         </property>
         <property name="selectionMode">
          <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
@@ -2419,6 +2425,7 @@
     <addaction name="actionSettings"/>
     <addaction name="actionImport_ADIF"/>
     <addaction name="actionExport_ADIF"/>
+    <addaction name="actionExport_CABRILLO"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>
@@ -2447,6 +2454,11 @@
   <action name="actionExport_ADIF">
    <property name="text">
     <string>Export ADIF</string>
+   </property>
+  </action>
+  <action name="actionExport_CABRILLO">
+   <property name="text">
+    <string>Export CABRILLO</string>
    </property>
   </action>
  </widget>

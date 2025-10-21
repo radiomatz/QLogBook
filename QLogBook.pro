@@ -11,6 +11,7 @@ SOURCES += \
     adif.cpp \
     adiffields.c \
     bands.cpp \
+    cabrilloheader.cpp \
     callfield.cpp \
     database.cpp \
     grids.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     QLogBook.h \
+    cabrilloheader.h \
     callfield.h \
     grids.h \
     mainwindow.h \
@@ -34,6 +36,7 @@ HEADERS += \
     worker.h
 
 FORMS += \
+    cabrilloheader.ui \
     mainwindow.ui \
     settings.ui
 

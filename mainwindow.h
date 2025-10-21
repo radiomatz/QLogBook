@@ -26,8 +26,9 @@ private slots:
     void sigmode(QString m);
     void showmode(QString m);
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
     void on_qsoView_clicked(const QModelIndex &index);
-    void on_qsoView_pressed(const QModelIndex &index);
     void on_qsoView_activated(const QModelIndex &index);
 
     void on_qrzButton_clicked();
@@ -48,6 +49,9 @@ private slots:
     void on_actionImport_ADIF_triggered();
     void on_actionExport_ADIF_triggered();
 
+
+
+    void on_actionExport_CABRILLO_triggered();
 
 private:
     Ui::MainWindow *ui;

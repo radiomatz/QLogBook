@@ -16,9 +16,10 @@
 #include <QFile>
 #include <QTcpSocket>
 #include "ui_mainwindow.h"
+#include "cabrilloheader.h"
 
 #define MY_PROG "QLogBook"
-#define MY_VERSION "0.1.1"
+#define MY_VERSION "0.1.7"
 #define MY_ORG "DM2HR"
 #define MY_DOMAIN "dm2hr.hmro.de"
 
@@ -34,9 +35,7 @@ extern QSettings conf;
 extern QProcess *process;
 extern Ui::MainWindow *uip;
 extern bool debugsql;
-extern Worker* worker;
-
-#define EXPORTFILE "qlogbook-export.adif"
+extern Worker *worker;
 
 bool open_db();
 bool generate_qsolist(MainWindow *parent);
@@ -51,6 +50,8 @@ long HamlibFreq();
 QString HamlibMode();
 bool increment_counter();
 QString find_band ( float freq );
+void cabrillo_savetoconfig(cabrilloheader *ch);
+void cabrillo_restorefromconfig(cabrilloheader *ch);
 
 struct sbands { char *mtr; float lower; float upper; };
 
@@ -63,7 +64,8 @@ typedef struct ADIFRECORD ADI;
 extern ADI adi;
 
 int import_adif(char *filename);
-bool export_adif(QFile *fi = new QFile(EXPORTFILE));
+bool export_adif(QFile *fi);
+bool export_cabrillo(QFile *fi, cabrilloheader *ch);
 int write_adif_record();
 int find_adif_field(char *what);
 bool doquery(QString qsz);

@@ -22,10 +22,14 @@
 #include <QItemSelectionModel>
 #include <QMessageBox>
 #include <QStringList>
+#include <qobject.h>
 
+#include "cabrilloheader.h"
+#include "ui_cabrilloheader.h"
 #include "bands.cpp"
 
 bool doquery(QString qsz);
+
 
 QString find_band ( float freq ) {
     int i;
@@ -83,6 +87,7 @@ bool update_fields() {
     return true;
 }
 
+
 bool generate_qsolist(MainWindow *parent) {
     QString ltabelle = "vqso"; // vqso is a view of table qso
 
@@ -108,7 +113,9 @@ bool generate_qsolist(MainWindow *parent) {
     tv->resizeColumnsToContents();
     tv->setMinimumWidth(440);
     tv->show();
+
     generate_qsodetaillist(parent, mtv->index(0,0).data().toInt());
+
 
     return true;
 };
@@ -122,10 +129,10 @@ bool generate_qsodetaillist(MainWindow *parent, int nr) {
     mtvd->setEditStrategy(QSqlTableModel::OnManualSubmit);
     mtvd->setFilter(QString("nr=%1").arg(nr));
     mtvd->select();
+
     mtvd->setHeaderData(0, Qt::Horizontal, "QsoNr");
     mtvd->setHeaderData(1, Qt::Horizontal, "Field");
     mtvd->setHeaderData(2, Qt::Horizontal, "Value");
-
 
     QTableView* tvd = uip->qsodView;
     tvd->setModel(mtvd);
@@ -136,9 +143,8 @@ bool generate_qsodetaillist(MainWindow *parent, int nr) {
 //        else
 //            tvd->setItemDelegateForColumn(i, new MyItemDelegate(tvd));
     }
-    // tvd->hideColumn(0); // don't show the ID
+    tvd->hideColumn(0); // don't show the ID
     tvd->resizeColumnsToContents();
-
 
     tvd->show();
 
@@ -259,6 +265,7 @@ bool make_new_qso(QString callsign) {
     doquery(qry.arg("freq").arg(freq));
     doquery(qry.arg("mode", mode));
     doquery(qry.arg("station_callsign", mycall));
+    doquery(qry.arg("operator", mycall));
     if ( mode.compare("SSB") == 0 && !pw->submode.isEmpty() ) {
         doquery(qry.arg("submode", pw->submode));
     }
@@ -293,6 +300,7 @@ bool make_new_qso(QString callsign) {
 
     return true;
 }
+
 
 bool testnr(QString test, int *nr) {
 bool bok;
@@ -360,6 +368,7 @@ bool delete_qso(QModelIndexList qmi) {
     return true;
 }
 
+// ADIF export routines
 
 bool adif_header(QFile *f) {
     QDateTime local(QDateTime::currentDateTime());
@@ -431,3 +440,216 @@ bool export_adif(QFile *fi) {
     return true;
 }
 
+
+// CABRILLO export routines
+
+bool cabrillo_header(QFile *f, cabrilloheader *ch) {
+
+    QString header = QString("START-OF-LOG:3.0\n\
+CONTEST: " + ch->uip->contest->currentText() + "\n\
+CALLSIGN: " + ch->uip->callsign->text().toUpper() + "\n\
+GRID-LOCATOR: " + ch->uip->locator->text() + "\n\
+LOCATION: " + ch->uip->location->text() + "\n\
+CATEGORY-OPERATOR: " + ch->uip->callsign->text() + "\n\
+CATEGORY-BAND: " + ch->uip->bands->currentText() + "\n\
+CATEGORY-MODE: " + ch->uip->mode->currentText() + "\n\
+CATEGORY-POWER: " + ch->uip->power->currentText() + "\n\
+CATEGORY-STATION: " + ch->uip->station->currentText() + "\n\
+CATEGORY-TIME: " + ch->uip->time->currentText() + "\n\
+CATEGORY-TRANSMITTER: " + ch->uip->trx->currentText() + "\n\
+CATEGORY-OVERLAY: " + ch->uip->overlay->currentText() + "\n\
+CATEGORY-ASSISTED: " + ch->uip->assisted->currentText() + "\n\
+CERTIFICATE: " + ch->uip->certificate->currentText() + "\n\
+CLAIMED-SCORE: " + ch->uip->certificate->currentText() + "\n\
+CLUB: " + ch->uip->club->text() + "\n\
+CREATED-BY: " + QString(MY_PROG) + " " + QString(MY_ORG) + " " + QString(MY_VERSION) + "\n\
+OPERATORS: " + ch->uip->operators->text() + "\n\
+NAME: " + ch->uip->name->text() + "\n\
+EMAIL: " + ch->uip->email->text() + "\n\
+ADDRESS: " + ch->uip->address->text() + "\n\
+ADDRESS-POSTALCODE: " + ch->uip->postalcode->text() + "\n\
+ADDRESS-CITY: " + ch->uip->city->text() + "\n\
+ADDRESS-STATE-PROVINCE: " + ch->uip->state->text() + "\n\
+ADDRESS-COUNTRY: " + ch->uip->country->text() + "\n\
+OFFTIME: " + ch->uip->offtime->text() + "\n\
+SOAPBOX: " + ch->uip->soapbox->toPlainText() + "\n");
+    // qDebug() << header;
+    f->write(header.toLocal8Bit(), header.length());
+}
+
+bool cabrillo_footer(QFile *f) {
+    QString foot = "END-OF-LOG:\n";
+    // qDebug() << foot;
+    f->write(foot.toLocal8Bit(),foot.length());
+}
+
+bool cabrillo_record(QFile *f, int qsonr) {
+    QString callsign =  uip->mycall->text().toUpper();
+    QString cabritags = "QSO:";
+    QStringList cfields = {"freq", "mode", "qso_date", "time_on", "*MYCALL*", "rst_sent", "stx_string", "call", "rst_rcvd", "srx_string", "*T*"   };
+    int field_lens[] = {5, 2, 10, 4, 13, 3, 6, 13, 3, 6, 1};
+
+    int j = 0;
+    QString val;
+    for (auto i = cfields.begin(), end = cfields.end(); i != end; ++i, j++) {
+
+        if ( *i == "*MYCALL*" ) {
+            val = callsign;
+        } else if ( *i == "*T*" ) {
+            val = " ";
+        } else {
+            QString sqry("select * from qsod where nr=%1 and field='%2';");
+            QSqlQuery qry(sqry.arg(qsonr).arg(*i));
+            // qDebug() << sqry.arg(qsonr).arg(*i);
+            while(qry.next()) {
+
+                val = qry.value(2).toString();
+
+                if ( cfields.at(j) == "freq" ) {
+                    bool ok;
+                    float f;
+                    f = val.toFloat(&ok);
+                    if ( ok && f < 30 ) {
+                        long fl = f * 1000;
+                        val = QString("%1").arg(fl);
+                    }
+                }
+                else if ( cfields.at(j) == "mode" ) {
+                    // CW PH FM RY DG
+                    if ( val.startsWith("ft") )
+                        val =  "DG";
+                    else if ( val == "rtty")
+                        val =  "RT";
+                    else if ( val == "asci")
+                        val =  "RT";
+                    else if ( val == "usb")
+                        val =  "SSB";
+                    else if ( val == "lsb")
+                        val =  "SSB";
+                    else if ( val.contains("fsk") )
+                        val =  "DG";
+                    else if ( val == "sstv")
+                        val =  "DG";
+                    else if ( val == "olivia")
+                        val =  "DG";
+                    else
+                        val = "PH";
+                } else if ( cfields.at(j) == "qso_date" ) {
+                    val.insert(4, '-');
+                    val.insert(7, '-');
+                }
+            }
+
+        }
+        val.truncate(field_lens[j]);
+        cabritags.append(" " + val.leftJustified(field_lens[j]));
+        // qDebug() << *i << val << field_lens[j];
+    }
+    cabritags.append("\n");
+    // qDebug() << cabritags;
+    f->write(cabritags.toLocal8Bit(), cabritags.length());
+}
+
+bool export_cabrillo(QFile *fi, cabrilloheader *ch) {
+    if ( !fi->open(QIODevice::ReadWrite | QIODevice::Text) ) {
+        QMessageBox msgBox(QMessageBox::Critical, "File open error", "Error while opening output file:" + fi->fileName(), QMessageBox::Abort);
+        msgBox.exec();
+        return false;
+    }
+    QItemSelectionModel *select = uip->qsoView->selectionModel();
+    if ( !select->hasSelection() ) {
+        QMessageBox msgBox(QMessageBox::Critical, "No Range", "Nothing to Export selected", QMessageBox::Abort);
+        msgBox.exec();
+        return false;
+    }
+    cabrillo_header(fi, ch);
+    QModelIndexList range = select->selectedRows(); // return selected row(s)
+    for(int i = 0; i < range.length(); i++) {
+        //        qDebug() << range.at(i).row() << " : " << range.at(i).data().toInt();
+        cabrillo_record(fi, range.at(i).data().toInt() );
+    }
+    cabrillo_footer(fi);
+    fi->close();
+    return true;
+}
+
+void savefield( QComboBox *cb, QString name ) {
+    conf.setValue(name, cb->currentText());
+}
+void savefield( QLineEdit *le, QString name ) {
+    conf.setValue(name, le->text());
+}
+void savefield( QTextEdit *te, QString name ) {
+    conf.setValue(name, te->toPlainText());
+}
+void cabrillo_savetoconfig(cabrilloheader *ch) {
+    savefield(ch->uip->address, "ch-address");
+    savefield(ch->uip->assisted, "ch-assisted");
+    savefield(ch->uip->bands, "ch-bands");
+    savefield(ch->uip->callsign, "ch-callsign");
+    savefield(ch->uip->catop, "ch-catop");
+    savefield(ch->uip->certificate, "ch-certificate");
+    savefield(ch->uip->city, "ch-city");
+    savefield(ch->uip->club, "ch-club");
+    savefield(ch->uip->contest, "ch-contest");
+    savefield(ch->uip->country, "ch-country");
+    savefield(ch->uip->email, "ch-email");
+    savefield(ch->uip->location, "ch-location");
+    savefield(ch->uip->locator, "ch-locator");
+    savefield(ch->uip->mode, "ch-mode");
+    savefield(ch->uip->name, "ch-name");
+    savefield(ch->uip->offtime, "ch-offtime");
+    savefield(ch->uip->operators, "ch-operators");
+    savefield(ch->uip->overlay, "ch-overlay");
+    savefield(ch->uip->postalcode, "ch-postalcode");
+    savefield(ch->uip->power, "ch-power");
+    savefield(ch->uip->score, "ch-score");
+    savefield(ch->uip->soapbox, "ch-soapbox");
+    savefield(ch->uip->state, "ch-state");
+    savefield(ch->uip->station, "ch-station");
+    savefield(ch->uip->time, "ch-time");
+    savefield(ch->uip->trx, "ch-trx");
+    conf.sync();
+}
+
+
+void restorefield( QComboBox *cb, QString name ) {
+    if ( !conf.value(name, "").toString().isEmpty() )
+        cb->setCurrentText( conf.value(name).toString() );
+}
+void restorefield( QLineEdit *le, QString name ) {
+    if ( !conf.value(name,  "").toString().isEmpty() )
+        le->setText( conf.value(name).toString() );
+}
+void restorefield( QTextEdit *te, QString name ) {
+    if ( !conf.value(name,  "").toString().isEmpty() )
+        te->setText(conf.value(name).toString() );
+}
+void cabrillo_restorefromconfig(cabrilloheader *ch) {
+    restorefield(ch->uip->address, "ch-address");
+    restorefield(ch->uip->assisted, "ch-assisted");
+    restorefield(ch->uip->bands, "ch-bands");
+    restorefield(ch->uip->callsign, "ch-callsign");
+    restorefield(ch->uip->catop, "ch-catop");
+    restorefield(ch->uip->certificate, "ch-certificate");
+    restorefield(ch->uip->city, "ch-city");
+    restorefield(ch->uip->club, "ch-club");
+    restorefield(ch->uip->contest, "ch-contest");
+    restorefield(ch->uip->country, "ch-country");
+    restorefield(ch->uip->email, "ch-email");
+    restorefield(ch->uip->location, "ch-location");
+    restorefield(ch->uip->locator, "ch-locator");
+    restorefield(ch->uip->mode, "ch-mode");
+    restorefield(ch->uip->name, "ch-name");
+    restorefield(ch->uip->offtime, "ch-offtime");
+    restorefield(ch->uip->operators, "ch-operators");
+    restorefield(ch->uip->overlay, "ch-overlay");
+    restorefield(ch->uip->postalcode, "ch-postalcode");
+    restorefield(ch->uip->power, "ch-power");
+    restorefield(ch->uip->score, "ch-score");
+    restorefield(ch->uip->soapbox, "ch-soapbox");
+    restorefield(ch->uip->state, "ch-state");
+    restorefield(ch->uip->station, "ch-station");
+    restorefield(ch->uip->time, "ch-time");
+    restorefield(ch->uip->trx, "ch-trx");
+}

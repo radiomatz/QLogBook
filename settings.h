@@ -26,7 +26,6 @@ private slots:
     void on_bokcancel_accepted();
     void on_bokcancel_rejected();
 
-
 private:
     Ui::Settings *ui;
 };

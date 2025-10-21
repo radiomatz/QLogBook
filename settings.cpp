@@ -133,7 +133,3 @@ void Settings::on_bokcancel_accepted() {
 
 void Settings::on_bokcancel_rejected() {
 }
-
-
-
-
