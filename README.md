@@ -1,5 +1,5 @@
 # QLogBook
-Ham Logbook with sqlite3 Database, adif im- and export and Hamlib(Net) connection
+Ham Logbook with sqlite3 Database, adif im- and export, cabrillo export, and Hamlib(Net) connection
 
 <img src="qlogbook.png">
 
@@ -8,7 +8,7 @@ written for linux, should run also on Windows and MacOS<br/>
 
 ## requirements:
 - sqlite 3.49.100 (best compile from source)
-- Qt6 (best manual install)
+- Qt6 (best manual install Versuion 6.7.2  into /opt/)
 
 ## build it:
         mkdir build
