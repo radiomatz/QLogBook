@@ -1,6 +1,7 @@
 #include "myitemdelegate.h"
 #include <QLineEdit>
 #include <QSqlTableModel>
+#include <QDebug>
 
 extern QSqlTableModel *mtvd;
 

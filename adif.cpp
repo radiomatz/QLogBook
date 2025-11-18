@@ -118,7 +118,7 @@ long find_next_eor(char *buf, long start, long end) {
 
 // parse buffer in which lies adif-file completely
 int parse_qso(char *buf, long start, long end) {
-    long i = start, dlen;
+    long dlen;
     char *tag = buf + start, *len, *gtsign, *nexttag;
     char lenfield[LENFIELDSZ];
     char tagname[TAGNAMESZ];
@@ -236,7 +236,7 @@ int write_adif_record() {
 
 
 // find a field called char *what in already filled ADI Structure
-int find_adif_field(char *what) {
+int find_adif_field(const char *what) {
     for ( int i = 0; i < NRADIFIELDS; i++ )
         if ( !strcasecmp(adif_fields[i], what) )
             return(i);

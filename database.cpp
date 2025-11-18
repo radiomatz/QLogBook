@@ -1,5 +1,4 @@
 #include "QLogBook.h"
-#include <db.h>
 #include <string.h>
 #include <stdlib.h>
 #include <QMessageBox>
@@ -27,6 +26,7 @@
 #include "cabrilloheader.h"
 #include "ui_cabrilloheader.h"
 #include "bands.cpp"
+#include "grids.h"
 
 bool doquery(QString qsz);
 
@@ -335,6 +335,7 @@ bool increment_counter() {
         }
     }
     uip->exchout->setText(exchout);
+    return(true);
 }
 
 
@@ -383,12 +384,14 @@ bool adif_header(QFile *f) {
             "<eoh>" + "\n";
 //    qDebug() << header;
     f->write(header.toLocal8Bit(),header.length());
+    return(true);
 }
 
 bool adif_footer(QFile *f) {
     QString foot = "\n\n";
     // qDebug() << foot;
     f->write(foot.toLocal8Bit(),foot.length());
+    return(true);
 }
 
 bool adif_record(QFile *f, int qsonr) {
@@ -415,6 +418,7 @@ bool adif_record(QFile *f, int qsonr) {
     adiftags.append("<eor>\n");
 //    qDebug() << "qsonr:" << qsonr << adiftags;
     f->write(adiftags.toLocal8Bit(), adiftags.length());
+    return(true);
 }
 
 bool export_adif(QFile *fi) {
@@ -475,12 +479,14 @@ OFFTIME: " + ch->uip->offtime->text() + "\n\
 SOAPBOX: " + ch->uip->soapbox->toPlainText() + "\n");
     // qDebug() << header;
     f->write(header.toLocal8Bit(), header.length());
+    return(true);
 }
 
 bool cabrillo_footer(QFile *f) {
     QString foot = "END-OF-LOG:\n";
     // qDebug() << foot;
     f->write(foot.toLocal8Bit(),foot.length());
+    return(true);
 }
 
 bool cabrillo_record(QFile *f, int qsonr) {
@@ -548,6 +554,7 @@ bool cabrillo_record(QFile *f, int qsonr) {
     cabritags.append("\n");
     // qDebug() << cabritags;
     f->write(cabritags.toLocal8Bit(), cabritags.length());
+    return(true);
 }
 
 bool export_cabrillo(QFile *fi, cabrilloheader *ch) {
@@ -652,4 +659,22 @@ void cabrillo_restorefromconfig(cabrilloheader *ch) {
     restorefield(ch->uip->station, "ch-station");
     restorefield(ch->uip->time, "ch-time");
     restorefield(ch->uip->trx, "ch-trx");
+}
+
+
+QString qrz_record(int qsonr) {
+    return(QString("%1").arg(qsonr));
+}
+
+
+QString export_qrz(QItemSelectionModel *select) {
+
+
+
+    QString ret = "";
+    QModelIndexList range = select->selectedRows(); // return selected row(s)
+    for(int i = 0; i < range.length(); i++) {
+        ret += qrz_record(range.at(i).data().toInt() );
+    }
+    return(ret);
 }

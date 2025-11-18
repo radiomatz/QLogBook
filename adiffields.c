@@ -1,4 +1,4 @@
-char *adif_fields[NRADIFIELDS] = {
+char adif_fields[][NRADIFIELDS] = {
 "ADDRESS",
 "ADDRESS_INTL",
 "AGE",

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1053</width>
-    <height>707</height>
+    <height>805</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -2210,7 +2210,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="bhor" stretch="6,4,3">
+     <layout class="QHBoxLayout" name="bhor" stretch="6,0,4">
       <property name="sizeConstraint">
        <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
       </property>
@@ -2255,47 +2255,73 @@
        </widget>
       </item>
       <item>
-       <widget class="QTableView" name="qsodView">
-        <property name="minimumSize">
-         <size>
-          <width>2</width>
-          <height>1</height>
-         </size>
-        </property>
-        <property name="sizeIncrement">
-         <size>
-          <width>1</width>
-          <height>1</height>
-         </size>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>2</width>
-          <height>15</height>
-         </size>
-        </property>
-        <property name="contextMenuPolicy">
-         <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::EditTrigger::DoubleClicked</set>
-        </property>
-        <property name="dragEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="dragDropMode">
-         <enum>QAbstractItemView::DragDropMode::DropOnly</enum>
-        </property>
-        <property name="defaultDropAction">
-         <enum>Qt::DropAction::CopyAction</enum>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="hbox2">
+        <item>
+         <widget class="QLabel" name="dist">
+          <property name="toolTip">
+           <string notr="true"/>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Shape::Box</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Raised</enum>
+          </property>
+          <property name="lineWidth">
+           <number>2</number>
+          </property>
+          <property name="text">
+           <string notr="true">Dist</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="qsodView">
+          <property name="minimumSize">
+           <size>
+            <width>2</width>
+            <height>1</height>
+           </size>
+          </property>
+          <property name="sizeIncrement">
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>2</width>
+            <height>15</height>
+           </size>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::DoubleClicked</set>
+          </property>
+          <property name="dragEnabled">
+           <bool>true</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::DragDropMode::DropOnly</enum>
+          </property>
+          <property name="defaultDropAction">
+           <enum>Qt::DropAction::CopyAction</enum>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="zvert">
@@ -2415,7 +2441,7 @@
      <x>0</x>
      <y>0</y>
      <width>1053</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSettings">
@@ -2426,6 +2452,7 @@
     <addaction name="actionImport_ADIF"/>
     <addaction name="actionExport_ADIF"/>
     <addaction name="actionExport_CABRILLO"/>
+    <addaction name="actionExport_QRZ"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>
@@ -2459,6 +2486,11 @@
   <action name="actionExport_CABRILLO">
    <property name="text">
     <string>Export CABRILLO</string>
+   </property>
+  </action>
+  <action name="actionExport_QRZ">
+   <property name="text">
+    <string>Export QRZ</string>
    </property>
   </action>
  </widget>

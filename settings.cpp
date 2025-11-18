@@ -16,6 +16,7 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
     getconf();
     ui->edbpath->setText(dbpath);
     ui->emycall->setText(mycall);
+    ui->grid->setText(mygrid);
     ui->host->setText(host);
     ui->port->setText(QString(QString("%1").arg(port)));
     ui->browser->setText(browser);
@@ -24,6 +25,7 @@ Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
         conf.value("dontaskfordelete").toInt() == 1 ? true : false) );
     ui->exportpath->setText(exportpath);
     ui->backupdb->setChecked(conf.value("dbbackup").toInt() == 1 ? true : false);
+    ui->qrzkey->setText(conf.value("qrzkey").toString());
     addfld();
 }
 
@@ -58,6 +60,7 @@ bool getconf() {
     port = conf.value("port", 0).toInt();
     browser = conf.value("browser", "firefox").toString();
     browserargs = conf.value("browserargs", "").toString();
+    mygrid = conf.value("mygrid", "AA00").toString();
 
     QStringList tmp = conf.value("additionalvalues", additionalvalues).toStringList();
     if ( tmp.length() == additionalvalues.length() ) {
@@ -94,6 +97,9 @@ void Settings::on_bokcancel_accepted() {
     uip->mycall->setText(mycall);
     conf.setValue("mycall", mycall);
 
+    mygrid = ui->grid->text().toUpper();
+    conf.setValue("mygrid", mygrid);
+
     QString olddbpath = dbpath;
     dbpath = ui->edbpath->text();
 
@@ -118,6 +124,8 @@ void Settings::on_bokcancel_accepted() {
 
     conf.setValue("dontaskfordelete", (ui->dontaskfordelete->isChecked()?1:0) );
     conf.setValue("dbbackup", (ui->backupdb->isChecked()?1:0) );
+
+    conf.setValue("qrzkey", ui->qrzkey->text());
 
     QString tmpdbpath = ui->edbpath->text();
     if ( tmpdbpath.compare(dbpath) != 0 || olddbpath.compare(dbpath) != 0 ) {

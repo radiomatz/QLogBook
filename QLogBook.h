@@ -19,7 +19,7 @@
 #include "cabrilloheader.h"
 
 #define MY_PROG "QLogBook"
-#define MY_VERSION "0.1.7"
+#define MY_VERSION "0.1.8"
 #define MY_ORG "DM2HR"
 #define MY_DOMAIN "dm2hr.hmro.de"
 
@@ -29,7 +29,7 @@
 extern QSqlDatabase db;
 extern QSqlTableModel *mtv, *mtvd;
 extern MainWindow *pw;
-extern QString dbpath, exportpath, host, mycall, browser, browserargs;
+extern QString dbpath, exportpath, host, mycall, mygrid, browser, browserargs;
 extern int port;
 extern QSettings conf;
 extern QProcess *process;
@@ -52,10 +52,11 @@ bool increment_counter();
 QString find_band ( float freq );
 void cabrillo_savetoconfig(cabrilloheader *ch);
 void cabrillo_restorefromconfig(cabrilloheader *ch);
+int findrow(QString what);
 
-struct sbands { char *mtr; float lower; float upper; };
+struct sbands { const char *mtr; float lower; float upper; };
 
-extern char *adif_fields[NRADIFIELDS];
+extern char adif_fields[][NRADIFIELDS];
 struct ADIFRECORD {
 //    db_recno_t nr;
     uint8_t f[NRADIFIELDS][ADIFIELDSIZE];
@@ -66,8 +67,9 @@ extern ADI adi;
 int import_adif(char *filename);
 bool export_adif(QFile *fi);
 bool export_cabrillo(QFile *fi, cabrilloheader *ch);
+QString export_qrz(QItemSelectionModel *select);
 int write_adif_record();
-int find_adif_field(char *what);
+int find_adif_field(const char *what);
 bool doquery(QString qsz);
 
 int create_table_if_not_exist();

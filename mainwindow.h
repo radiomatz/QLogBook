@@ -40,6 +40,7 @@ private slots:
     void removeQsoDetail();
     void on_qsodView_customContextMenuRequested(const QPoint &pos);
     void on_qsodView_clicked(const QModelIndex &index);
+    void showdistance(void);
 
     void on_adifields_doubleClicked(const QModelIndex &index);
 
@@ -52,6 +53,8 @@ private slots:
 
 
     void on_actionExport_CABRILLO_triggered();
+
+    void on_actionExport_QRZ_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>516</width>
-    <height>529</height>
+    <width>520</width>
+    <height>536</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -29,7 +29,7 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>480</y>
+     <y>490</y>
      <width>181</width>
      <height>32</height>
     </rect>
@@ -50,10 +50,10 @@
      <x>10</x>
      <y>120</y>
      <width>471</width>
-     <height>24</height>
+     <height>27</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout1">
     <item>
      <widget class="QLabel" name="lhamhost">
       <property name="text">
@@ -77,8 +77,17 @@
     </item>
     <item>
      <widget class="QLineEdit" name="port">
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string notr="true"/>
+      </property>
+      <property name="maxLength">
+       <number>5</number>
+      </property>
       <property name="placeholderText">
-       <string>Port:4532</string>
+       <string>4532</string>
       </property>
      </widget>
     </item>
@@ -89,11 +98,11 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>362</width>
-     <height>24</height>
+     <width>471</width>
+     <height>27</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
+   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0">
     <item>
      <widget class="QLabel" name="lmycall">
       <property name="toolTip">
@@ -106,8 +115,49 @@
     </item>
     <item>
      <widget class="QLineEdit" name="emycall">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="maxLength">
+       <number>13</number>
+      </property>
       <property name="placeholderText">
-       <string>N0CALL</string>
+       <string notr="true">N0CALL</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="lgrid">
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string notr="true">GridSquare</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="grid">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="maxLength">
+       <number>13</number>
+      </property>
+      <property name="placeholderText">
+       <string notr="true">AA00</string>
       </property>
      </widget>
     </item>
@@ -119,7 +169,7 @@
      <x>10</x>
      <y>50</y>
      <width>481</width>
-     <height>24</height>
+     <height>27</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0">
@@ -167,7 +217,7 @@
      <x>10</x>
      <y>150</y>
      <width>471</width>
-     <height>24</height>
+     <height>27</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,2">
@@ -193,6 +243,15 @@
     </item>
     <item>
      <widget class="QLineEdit" name="browserargs">
+      <property name="text">
+       <string notr="true"/>
+      </property>
+      <property name="maxLength">
+       <number>80</number>
+      </property>
+      <property name="frame">
+       <bool>false</bool>
+      </property>
       <property name="placeholderText">
        <string>Parameter</string>
       </property>
@@ -204,7 +263,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>240</y>
+     <y>270</y>
      <width>471</width>
      <height>20</height>
     </rect>
@@ -217,7 +276,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>270</y>
+     <y>290</y>
      <width>471</width>
      <height>191</height>
     </rect>
@@ -248,7 +307,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>190</y>
+     <y>220</y>
      <width>451</width>
      <height>20</height>
     </rect>
@@ -263,7 +322,7 @@
      <x>10</x>
      <y>80</y>
      <width>481</width>
-     <height>24</height>
+     <height>27</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0">
@@ -306,7 +365,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>210</y>
+     <y>240</y>
      <width>231</width>
      <height>20</height>
     </rect>
@@ -314,6 +373,44 @@
    <property name="text">
     <string notr="true">db backup every day</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>180</y>
+     <width>362</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0">
+    <item>
+     <widget class="QLabel" name="lqrzkey">
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string notr="true">QRZ API Key</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="qrzkey">
+      <property name="inputMask">
+       <string notr="true">NNNN-NNNN-NNNN-NNNN</string>
+      </property>
+      <property name="text">
+       <string notr="true">---</string>
+      </property>
+      <property name="maxLength">
+       <number>19</number>
+      </property>
+      <property name="placeholderText">
+       <string notr="true">XXXX-XXXX-XXXX-XXXX</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

@@ -22,7 +22,7 @@ QSqlDatabase db;
 QSqlTableModel *mtv, *mtvd;
 ADI adi;
 MainWindow *pw;
-QString mycall = "N0CALL", host = "", browser, browserargs;
+QString mycall = "N0CALL", mygrid = "AA00", host = "", browser, browserargs;
 int port = 0;
 QSettings conf(MY_ORG,MY_PROG);
 QProcess *process;
@@ -32,7 +32,7 @@ Worker *worker;
 
 int main(int argc, char *argv[]) {
 int opt = 0, do_import_adif = 0;
-char *fnimport = "";
+char *fnimport = NULL;
 
     while ((opt = getopt (argc, argv, "i:")) != -1) {
         switch (opt) {
@@ -59,7 +59,7 @@ char *fnimport = "";
         exit(1);
     create_table_if_not_exist();
 
-    if ( do_import_adif ) {
+    if ( do_import_adif && fnimport != NULL ) {
         int nr = import_adif(fnimport);
         qDebug() << "read " << nr << " QSOs from " << fnimport;
         exit(0);

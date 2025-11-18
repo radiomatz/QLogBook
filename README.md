@@ -15,9 +15,9 @@ written for linux, should run also on Windows and MacOS<br/>
         cd build
         /opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
 
-or maybe
+for Debian(13):
 
-        qmake6 ../QLogBook.pro
+        /usr/lib/qt6/bin/qmake6 ../QLogBook.pro
 
 ### You MUST ALTER YOUR MAKEFILE NOW by Hand, otherwise it will crash!
 

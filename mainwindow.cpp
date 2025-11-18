@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "settings.h"
 #include "cabrilloheader.h"
+#include "grids.h"
 
 #include "QLogBook.h"
 #include <QFileDialog>
@@ -11,7 +12,7 @@
 #include <QTreeWidget>
 #include "worker.h"
 #include <QMessageBox>
-
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -108,13 +109,34 @@ void MainWindow::sigmode(QString m) {
 
 
 
+/*
+ * QSO List
+ */
+void MainWindow::showdistance(void) {
+    int rg = findrow("gridsquare");
+    int ic = findrow("call");
+    if ( rg >= 0 ) {
+        QString mdh = mtvd->index(rg, 2).data().toString();
+        float lon, lat, mylon, mylat;
+        grids_maidenhead2latlon(mygrid, &mylat, &mylon);
+        grids_maidenhead2latlon(mdh, &lat, &lon);
+        int dist = grids_dist(mylat, mylon, lat, lon);
+        // qDebug() << "Call:" << mtvd->index(ic, 2).data().toString() << "Loc:" << mdh << "Dist:" << dist << "lat:" << lat << "lon:" << lon;
+        ui->dist->setText(QString("%1 km").arg(dist));
+    } else
+        ui->dist->setText("");
+}
+
 void MainWindow::on_qsoView_clicked(const QModelIndex &index) {
     int qsonr = mtv->index(index.row(), 0).data().toInt();
     generate_qsodetaillist(this, qsonr);
+    showdistance();
 }
+
 void MainWindow::on_qsoView_activated(const QModelIndex &index) {
     on_qsoView_clicked(index);
 }
+
 bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
     // TODO: make QSqlTableView do this itself!
     if (watched == ui->qsoView && event->type() == QEvent::KeyPress) {
@@ -132,7 +154,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
             mtv->selectRow(row);
             int qsonr = mtv->index(row, 0).data().toInt();
             generate_qsodetaillist(this, qsonr);
-            qDebug() << "row:" << row << "cnt:" << mtv->rowCount();
+            // qDebug() << "row:" << row << "cnt:" << mtv->rowCount();
+            showdistance();
         }
     }
     return false;
@@ -140,17 +163,37 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 
 
 
+
+
+
+
+/*
+ * general Commit of database changes
+ */
+
+
+
+void MainWindow::mysubmit() {
+    mtvd->submitAll();
+    mtv->select();
+}
+
+
+
+/*
+ *  QSO Detail View Handling
+ */
+
 int findrow(QString what) {
     int n = mtvd->rowCount();
     for ( int i = 0; i < n; i++ ) {
-        qDebug() << mtvd->index(i, 1).data().toString();
+        // qDebug() << mtvd->index(i, 1).data().toString();
         if ( what.compare(mtvd->index(i, 1).data().toString(), Qt::CaseInsensitive) == 0 ) {
             return(i);
         }
     }
     return(-1);
 }
-
 
 void MainWindow::fieldChanged() {
     QString newval = mtvd->index(currRow, 2).data().toString();
@@ -172,10 +215,6 @@ void MainWindow::fieldChanged() {
     }
 }
 
-
-
-
-
 void MainWindow::on_qsodView_doubleClicked(const QModelIndex &index) {
     // qDebug() << " double click:" << index.row();
     currRow = index.row();
@@ -183,23 +222,13 @@ void MainWindow::on_qsodView_doubleClicked(const QModelIndex &index) {
     oldval = mtvd->index(currRow, 2).data().toString();
 }
 
-void MainWindow::mysubmit() {
-    mtvd->submitAll();
-
-    mtv->select();
-}
-
-
-
-
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void MainWindow::removeQsoDetail() {
     mtvd->removeRow(currdRow);
     mtvd->submitAll();
 }
-// needs Attr ownContextMenu in ui
+
 void MainWindow::on_qsodView_customContextMenuRequested(const QPoint &pos){
+    // needs Attr ownContextMenu in ui
     QModelIndex cur = ui->qsodView->indexAt(pos);
     currdRow = cur.row();
     QMenu contextMenu("DetailMenu", ui->qsodView);
@@ -208,11 +237,16 @@ void MainWindow::on_qsodView_customContextMenuRequested(const QPoint &pos){
     contextMenu.addAction(&action1);
     contextMenu.exec(ui->qsodView->viewport()->mapToGlobal(pos));
 }
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
 void MainWindow::on_qsodView_clicked(const QModelIndex &index) {
 }
+
+
+
+/*
+ *  ADIF Frame
+ */
+
 
 
 void MainWindow::on_adifields_doubleClicked(const QModelIndex &index) {
@@ -228,6 +262,9 @@ void MainWindow::on_adifields_doubleClicked(const QModelIndex &index) {
 
 
 
+/*
+ *  Buttons
+ */
 
 
 void MainWindow::on_qrzButton_clicked() {
@@ -254,7 +291,9 @@ void MainWindow::on_newButton_clicked() {
 
 
 
-
+/*
+ *  Menu
+ */
 
 void MainWindow::on_actionSettings_triggered() {
     Settings *conf = new Settings();
@@ -291,7 +330,6 @@ void MainWindow::on_actionExport_ADIF_triggered() {
 }
 
 
-
 void MainWindow::on_actionExport_CABRILLO_triggered() {
 
     QItemSelectionModel *select = uip->qsoView->selectionModel();
@@ -306,7 +344,6 @@ void MainWindow::on_actionExport_CABRILLO_triggered() {
     if ( ch->exec() != QDialog::Accepted )
         return;
     cabrillo_savetoconfig(ch);
-
 
     QDateTime local(QDateTime::currentDateTime());
     QDateTime UTC(local.toUTC());
@@ -324,5 +361,23 @@ void MainWindow::on_actionExport_CABRILLO_triggered() {
 
     return;
 
+}
+
+
+void MainWindow::on_actionExport_QRZ_triggered() {
+    QItemSelectionModel *select = uip->qsoView->selectionModel();
+    if ( !select->hasSelection() ) {
+        QMessageBox msgBox(QMessageBox::Critical, "No Range", "Nothing to Export selected", QMessageBox::Abort);
+        msgBox.exec();
+        return;
+    }
+
+    QString log = export_qrz(select);
+    if ( log.length() > 0 ) {
+        QMessageBox msgBox(QMessageBox::Information, "Export to QRZ Site", log, QMessageBox::Ok);
+        msgBox.exec();
+    }
+
+    return;
 }
 
