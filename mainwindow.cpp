@@ -114,9 +114,10 @@ void MainWindow::sigmode(QString m) {
  */
 void MainWindow::showdistance(void) {
     int rg = findrow("gridsquare");
-    int ic = findrow("call");
-    if ( rg >= 0 ) {
-        QString mdh = mtvd->index(rg, 2).data().toString();
+    QString mdh;
+    if ( rg >= 0 )
+        mdh = mtvd->index(rg, 2).data().toString();
+    if ( mdh.length() >= 4 ) {
         float lon, lat, mylon, mylat;
         grids_maidenhead2latlon(mygrid, &mylat, &mylon);
         grids_maidenhead2latlon(mdh, &lat, &lon);
