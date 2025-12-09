@@ -26,15 +26,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QThread *thread = new QThread;
     worker = new Worker();
     worker->moveToThread(thread);
-    /*
-    if ( !host.isEmpty() && !port == 0 ) {
-        worker->tcp = new QTcpSocket();
-        worker->tcp->connectToHost(host, port);
-        if ( !worker->tcp->isOpen() ) {
-            qDebug() << "TCP connect failed! Port or Host wrong? YourPort:" << port << "YourHost:" << host;
-        }
-    }
-    */
     connect(worker, SIGNAL(sigfreq(long)), this, SLOT(sigfreq(long)));
     connect(worker, SIGNAL(sigmode(QString)), this, SLOT(sigmode(QString)));
     connect(thread, SIGNAL(started()), worker, SLOT(process()));
@@ -61,13 +52,12 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::sigfreq(long f) {
-    if ( f != 0 ) {
+    long oldfreq = ui->freq->text().toLong();
+    if ( f != 0 && f != oldfreq ) {
         QString tmp = QString("%1").arg(f);
         while ( tmp.length() < 12 )
             tmp = tmp.insert(0, " ");
         ui->freq->setText(tmp);
-//        if ( f == 14230000 || f == 21340000 || f == 28680000 )
-//            ui->cmode->setCurrentText("SSTV");
     }
 }
 
