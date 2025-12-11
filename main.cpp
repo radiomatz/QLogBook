@@ -34,11 +34,11 @@ int main(int argc, char *argv[]) {
 int opt = 0, do_import_adif = 0;
 char *fnimport = NULL;
 
-    while ((opt = getopt (argc, argv, "i:")) != -1) {
+    while ((opt = getopt (argc, argv, "I:")) != -1) {
         switch (opt) {
-        case 'i':
+        case 'I':
             fnimport = optarg;
-            do_import_adif = 0; // TODO: if this is active, Debugger is not running anymore
+            do_import_adif = 1; // TODO?: if this is active, Debugger is not running anymore
             break;
         }
     }
