@@ -662,15 +662,14 @@ void cabrillo_restorefromconfig(cabrilloheader *ch) {
 }
 
 
+/* TODO: export to QRZ */
+
 QString qrz_record(int qsonr) {
     return(QString("%1").arg(qsonr));
 }
 
 
 QString export_qrz(QItemSelectionModel *select) {
-
-
-
     QString ret = "";
     QModelIndexList range = select->selectedRows(); // return selected row(s)
     for(int i = 0; i < range.length(); i++) {
