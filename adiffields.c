@@ -1,4 +1,4 @@
-char adif_fields[][NRADIFIELDS] = {
+QStringList adif_fields = {
 "ADDRESS",
 "ADDRESS_INTL",
 "AGE",

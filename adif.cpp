@@ -126,7 +126,7 @@ int parse_qso(char *buf, long start, long end) {
     int err = 0;
 
     tag = index(tag, '<');
-    memset(&adi, 0, sizeof(ADI));
+    // memset(&adi, 0, sizeof(ADI));
 
     do {
         memset(lenfield, 0, LENFIELDSZ);
@@ -167,9 +167,9 @@ void get_positions(char *tag, char **len, char **gtsign, char **nexttag) {
 
 // fill ADI Structure for later writing into db
 void fill_adif_record(char *f, char *v)  {
-    for ( int i = 0; i < NRADIFIELDS; i++ ) {
-        if ( !strcasecmp(adif_fields[i], f) ) {
-            strcpy((char*)adi.f[i], v);
+    for ( int i = 0; i < adif_fields.length(); i++ ) {
+        if ( !adif_fields[i].compare(f, Qt::CaseInsensitive) ) {
+            adi.f[i] = v;
             //           printf(">%s<>%s<\n", f, v);
             return;
         }
@@ -191,7 +191,7 @@ void strtoupper(char *s) {
 // now we write realy into db
 int write_adif_record() {
     int icall = 0, idate = 0, itime = 0, iband = 0, imode = 0;
-    char ssql[2048];
+    QString ssql;
 
     icall = find_adif_field("call");
     idate = find_adif_field("qso_date");
@@ -200,8 +200,8 @@ int write_adif_record() {
     imode = find_adif_field("mode");
 
     // if time is not correct format (6 chars) fill up with zeroes
-    if (strlen((char*)adi.f[itime]) == 4)
-        strcat((char*)adi.f[itime], "00");
+    if (adi.f[itime].length() == 4)
+        adi.f[itime] += "00";
 
     if ( icall < 0 || idate < 0 || itime < 0 ) {
         QMessageBox msgbox( QMessageBox::Information, QString("Missing Info!"),
@@ -210,19 +210,28 @@ int write_adif_record() {
         return(0);
     }
 
-    strtoupper((char*)adi.f[icall]);
+    adi.f[icall] = adi.f[icall].toUpper();
 
     doquery("\n\nbegin transaction;\n");
-    sprintf(ssql, "insert into qso(call,date,time,band,mode) values('%s','%s','%s','%s','%s');\n",
-            adi.f[icall], adi.f[idate], adi.f[itime], adi.f[iband], adi.f[imode]);
+    ssql = "insert into qso(call,date,time,band,mode) values('" +
+        adi.f[icall] + "','" +
+        adi.f[idate] + "','" +
+        adi.f[itime] + "','" +
+        adi.f[iband] + "','" +
+        adi.f[imode] + "');\n";
     doquery(ssql);
     doquery("update tnr set nr = last_insert_rowid();\n");
     for ( int i = 0; i < NRADIFIELDS; i++ ) {
-        if ( adi.f[i] != NULL && strlen((char*)adi.f[i]) > 0) {
-            if ( strncmp((char*)adif_fields[i], "time_", 5) == 0 && strlen((char*)adi.f[i]) < 6) {
-                strncat((char*)adi.f[i], "0000",6 - strlen((char*)adi.f[i]));
+        if ( adi.f[i].length() > 0 ) {
+            ;
+            if ( adif_fields.at(i).startsWith("time_", Qt::CaseInsensitive) &&
+                adi.f[i].length() < 6) {
+                    // if time smaller than 6 bytes, fill it with zeroes
+                    adi.f[i] += (QString("0000").left( 6 - adi.f[i].length()));
+
             }
-            sprintf(ssql, "insert into qsod values((select nr from tnr limit 1),'%s','%s');\n", adif_fields[i], adi.f[i]);
+            ssql = "insert into qsod values((select nr from tnr limit 1),'"
+                + adif_fields[i] + "','" + adi.f[i] + "');\n";
             doquery(ssql);
         }
     }
@@ -238,7 +247,7 @@ int write_adif_record() {
 // find a field called char *what in already filled ADI Structure
 int find_adif_field(const char *what) {
     for ( int i = 0; i < NRADIFIELDS; i++ )
-        if ( !strcasecmp(adif_fields[i], what) )
+        if ( !adif_fields[i].compare(what, Qt::CaseInsensitive) )
             return(i);
     return(-1);
 }

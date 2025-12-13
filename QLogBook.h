@@ -56,11 +56,12 @@ int findrow(QString what);
 
 struct sbands { const char *mtr; float lower; float upper; };
 
-extern char adif_fields[][NRADIFIELDS];
+extern QStringList adif_fields;
 struct ADIFRECORD {
-//    db_recno_t nr;
-    uint8_t f[NRADIFIELDS][ADIFIELDSIZE];
-}  __attribute__((aligned(1),packed));
+//  db_recno_t nr;
+//  uint8_t f[NRADIFIELDS][ADIFIELDSIZE];
+    QStringList f;
+};
 typedef struct ADIFRECORD ADI;
 extern ADI adi;
 

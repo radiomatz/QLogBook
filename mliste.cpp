@@ -4,7 +4,8 @@
 mListe::mListe(QObject *parent)
     : QAbstractTableModel{parent} {
 
-
+    // make array for values of adiffields equal in size
+    adi.f.fill("", adif_fields.length());
 }
 
 int mListe::rowCount(const QModelIndex & /*parent*/) const
