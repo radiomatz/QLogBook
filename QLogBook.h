@@ -19,7 +19,7 @@
 #include "cabrilloheader.h"
 
 #define MY_PROG "QLogBook"
-#define MY_VERSION "0.1.8"
+#define MY_VERSION "0.1.9"
 #define MY_ORG "DM2HR"
 #define MY_DOMAIN "dm2hr.hmro.de"
 
