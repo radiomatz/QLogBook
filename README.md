@@ -1,5 +1,5 @@
 # QLogBook
-Ham Logbook with sqlite3 Database, adif (V3.1.5) im- and export, cabrillo export, and Hamlib(Net) connection
+Ham Logbook with sqlite3 Database, adif (V3.1.5) im- and export, cabrillo export, and direct tcp connection to hamlib, contest logging with number increment
 
 <img src="qlogbook.png">
 

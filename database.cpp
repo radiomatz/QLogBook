@@ -12,7 +12,6 @@
 #include <QDir>
 #include <QComboBox>
 #include <QLineEdit>
-#include "callfield.h"
 #include <QDebug>
 #include <QListView>
 #include <QItemDelegate>
@@ -23,10 +22,13 @@
 #include <QStringList>
 #include <qobject.h>
 
+#include "callfield.h"
 #include "cabrilloheader.h"
 #include "ui_cabrilloheader.h"
 #include "bands.cpp"
 #include "grids.h"
+
+extern QString ADIFVER;
 
 bool doquery(QString qsz);
 
@@ -377,9 +379,10 @@ bool adif_header(QFile *f) {
     QString crdt = UTC.toString("yyyyMMdd hhmmss");
 
     QString header = QString("ADIF Export") + "\n" +
-            "<adif_ver:5>3.1.5" + "\n" +
+            "<adif_ver:" + QString("%1>").arg(ADIFVER.length()) + ADIFVER + "\n" +
             "<created_timestamp:" + QString("%1").arg(crdt.length()) + ">" + crdt  + "\n" +
             "<programid:14>" + MY_PROG + " " + MY_ORG + "\n" +
+
             "<programversion:5>" + MY_VERSION + "\n" +
             "<eoh>" + "\n";
 //    qDebug() << header;

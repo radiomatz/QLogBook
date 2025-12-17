@@ -1,4 +1,6 @@
-QStringList adif_fields = {
+/* ADIF Vers 3.16 */
+QString ADIFVER = "3.1.6";
+QStringList adif_fields = { 
 "ADDRESS",
 "ADDRESS_INTL",
 "AGE",
@@ -38,6 +40,7 @@ QStringList adif_fields = {
 "DXCC",
 "EMAIL",
 "EQ_CALL",
+"EQSL_AG",
 "EQSL_QSLRDATE",
 "EQSL_QSLSDATE",
 "EQSL_QSL_RCVD",
@@ -71,6 +74,7 @@ QStringList adif_fields = {
 "MORSE_KEY_INFO",
 "MORSE_KEY_TYPE",
 "MS_SHOWER",
+"MY_",
 "MY_ALTITUDE",
 "MY_ANTENNA",
 "MY_ANTENNA_INTL",
@@ -178,5 +182,5 @@ QStringList adif_fields = {
 "VE_PROV",
 "VUCC_GRIDS",
 "WEB",
-"WWFF_REF"
+"WWFF_REF",
 };
