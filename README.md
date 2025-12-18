@@ -47,7 +47,7 @@ double click on value opens editor
 right click - delete
 
 ## export adif
-first mark range of qso's to export with click(begin) and shift-click(end), the select menu export
+first mark range of qso's to export with click(begin) and shift-click(end), then select menu export
 
 ## Questions: dm2hr@hmro.de
 vy 73 Matthias DM2HR
