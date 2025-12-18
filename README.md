@@ -1,5 +1,5 @@
 # QLogBook
-Ham Logbook with sqlite3 Database, adif (V3.1.6 without userdefined fields yet) im- and export, cabrillo export, and direct tcp connection to hamlib, contest logging with number increment, distance calculation, dynamically created database with automatic backup possibility
+Ham Logbook with sqlite3 Database, adif (V3.1.6 without userdefined fields yet) im- and export, cabrillo (v3.0) export, and direct tcp connection to hamlib, contest logging with number increment, distance calculation, dynamically created database with automatic backup possibility
 
 <img src="qlogbook.png">
 
@@ -15,7 +15,7 @@ written for linux, should run also on Windows and MacOS<br/>
     mkdir build
     cd build
 
-###for ubuntu (manual install of qt6):
+### for ubuntu (manual install of qt6):
     /opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
 ### for Debian(13):
     /usr/lib/qt6/bin/qmake6 ../QLogBook.pro
@@ -31,7 +31,9 @@ After that do a:<br />
 
     make
 	
-now, in your build directory is the runnable binary: QLogBook, you can start it with ./QLogBook
+now, in your build directory is the runnable binary: QLogBook, you can start it with 
+    
+	./QLogBook
 
 
 ## Importing many adif files on commandline:
