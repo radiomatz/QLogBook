@@ -15,21 +15,23 @@ written for linux, should run also on Windows and MacOS<br/>
     mkdir build
     cd build
 
-#for ubuntu (manual install of qt6):
+###for ubuntu (manual install of qt6):
     /opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
-# for Debian(13):
+### for Debian(13):
     /usr/lib/qt6/bin/qmake6 ../QLogBook.pro
 		
-### maybe obsolete: You MUST ALTER YOUR MAKEFILE NOW by Hand, otherwise it will crash!
+### maybe obsolete: if app crashes then, alter your Makefile (seems to be an issue with oldstyle char* []): 
 Yes, i know, this sounds strange, but this is sadley to say true!<br />
 In Your Makefile, at the top, there are two Lines, with CXXFLAGS and CFLAGS<br />
 Change the PHRASE "-O2" to "-g" - thats all you need.<br />
-  (i can not debug it, since the error is not existing in an built-for-debugging binary, so the optimization is the error)<br />
-
+  (i can not debug it, since the error is not existing in an built-for-debugging binary, so the optimization causes the issue)<br />
+ TODO: test if the issue is still existing.
 
 After that do a:<br />
 
     make
+	
+now, in your build directory is the runnable binary: QLogBook, you can start it with ./QLogBook
 
 
 ## Importing many adif files on commandline:
