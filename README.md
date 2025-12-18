@@ -1,5 +1,5 @@
 # QLogBook
-Ham Logbook with sqlite3 Database, adif (V3.1.6 without userdefined fields yet) im- and export, cabrillo export, and direct tcp connection to hamlib, contest logging with number increment, distance calculation
+Ham Logbook with sqlite3 Database, adif (V3.1.6 without userdefined fields yet) im- and export, cabrillo export, and direct tcp connection to hamlib, contest logging with number increment, distance calculation, dynamically created database with automatic backup possibility
 
 <img src="qlogbook.png">
 
