@@ -1,5 +1,5 @@
 # QLogBook
-Ham Logbook with sqlite3 Database, adif (V3.1.5) im- and export, cabrillo export, and direct tcp connection to hamlib, contest logging with number increment
+Ham Logbook with sqlite3 Database, adif (V3.1.6 without userdefined fields yet) im- and export, cabrillo export, and direct tcp connection to hamlib, contest logging with number increment, distance calculation
 
 <img src="qlogbook.png">
 
@@ -8,31 +8,29 @@ written for linux, should run also on Windows and MacOS<br/>
 
 ## requirements:
 - sqlite 3.49.100 (best compile from source)
-- Qt6 (best manual install Versuion 6.7.2  into /opt/)
+- Qt6 (>=6.7.2)
 
 ## build it:
+`
         mkdir build
         cd build
+
+#for ubuntu (manual install of qt6):
         /opt/Qt/6.7.2/gcc_64/bin/qmake6 ../QLogBook.pro
-
-for Debian(13):
-
+# for Debian(13):
         /usr/lib/qt6/bin/qmake6 ../QLogBook.pro
-
-### You MUST ALTER YOUR MAKEFILE NOW by Hand, otherwise it will crash!
-
+`
+### maybe obsolete: You MUST ALTER YOUR MAKEFILE NOW by Hand, otherwise it will crash!
 Yes, i know, this sounds strange, but this is sadley to say true!<br />
 In Your Makefile, at the top, there are two Lines, with CXXFLAGS and CFLAGS<br />
 Change the PHRASE "-O2" to "-g" - thats all you need.<br />
   (i can not debug it, since the error is not existing in an built-for-debugging binary, so the optimization is the error)<br />
-(maybe not needed under debian 13)<br />
-&nbsp;<br />
 
 
 After that do a:<br />
-
+`
         make
-
+`
 
 ## Importing many adif files on commandline:
 `for i in *.adif ; do QLogBook -I $i ; done`
