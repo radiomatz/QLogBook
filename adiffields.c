@@ -184,3 +184,4 @@ QStringList adif_fields = {
 "WEB",
 "WWFF_REF",
 };
+const static int ADIFSIZE = adif_fields.length();

@@ -383,9 +383,9 @@ bool adif_header(QFile *f) {
             "<adif_ver:" + QString("%1>").arg(ADIFVER.length()) + ADIFVER + "\n" +
             "<created_timestamp:" + QString("%1").arg(crdt.length()) + ">" + crdt  + "\n" +
             "<programid:14>" + MY_PROG + " " + MY_ORG + "\n" +
-
             "<programversion:5>" + MY_VERSION + "\n" +
-            "<eoh>" + "\n";
+            "<userdef0:8:S>OBSOLETE\n"
+            "<eoh>\n";
 //    qDebug() << header;
     f->write(header.toLocal8Bit(),header.length());
     return(true);
