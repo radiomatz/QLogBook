@@ -1,5 +1,10 @@
 #ifndef QLOGBOOK_H
 
+#define MY_PROG "QLogBook"
+#define MY_VERSION "0.2.0"
+#define MY_ORG "DM2HR"
+#define MY_DOMAIN "dm2hr.hmro.de"
+
 #include <QtSql/qtsqlglobal.h>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
@@ -17,14 +22,6 @@
 #include <QTcpSocket>
 #include "ui_mainwindow.h"
 #include "cabrilloheader.h"
-
-#define MY_PROG "QLogBook"
-#define MY_VERSION "0.1.9"
-#define MY_ORG "DM2HR"
-#define MY_DOMAIN "dm2hr.hmro.de"
-
-#define NRADIFIELDS 180
-#define ADIFIELDSIZE 25
 
 extern QSqlDatabase db;
 extern QSqlTableModel *mtv, *mtvd;

@@ -285,11 +285,12 @@ bool make_new_qso(QString callsign) {
         doquery(qry.arg("stx_string", exchout));
 
     // additional Fields from settings (static)
+    QStringList additionalfields = conf.value("additionalfields").toStringList();
     QStringList additionalvalues = conf.value("additionalvalues").toStringList();
     qry  = "insert into qsod values((select nr from tnr limit 1),'%1','%2');";
     for ( int i = 0; i < additionalvalues.length(); i++ ) {
-        if ( !additionalvalues[i].isEmpty() ) {
-            doquery(qry.arg(adif_fields[i], additionalvalues[i]));
+        if ( !additionalvalues[i].isEmpty() && !additionalfields[i].isEmpty() ) {
+            doquery(qry.arg(additionalfields[i], additionalvalues[i]));
         }
     }
 

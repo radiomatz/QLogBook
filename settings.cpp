@@ -7,7 +7,13 @@
 #include <QTableWidget>
 #include <QMessageBox>
 
-QStringList additionalvalues(NRADIFIELDS);
+int min(int a, int b) {
+    return(a>b?b:a);
+}
+
+
+QStringList additionalfields;
+QStringList additionalvalues;
 
 Settings::Settings(QWidget *parent) : QDialog(parent), ui(new Ui::Settings) {
     ui->setupUi(this);
@@ -36,19 +42,39 @@ Settings::~Settings() {
 
 void Settings::addfld() {
     ui->addfields->setColumnCount(2);
-    ui->addfields->setRowCount(NRADIFIELDS);
-    for ( int i = 0; i < NRADIFIELDS; i++ ) {
-        ui->addfields->setItem(i, 0, new QTableWidgetItem(adif_fields[i]));
+    for ( int i = 0; i < adif_fields.length(); i++ ) {
+        if (!additionalfields.contains(adif_fields[i])) {
+            additionalfields.append(adif_fields[i]);
+            additionalvalues.append("");
+        }
+    }
+    int fl = additionalfields.length();
+    ui->addfields->setRowCount(fl + 50); // space for creative people :-))
+    for ( int i = 0; i < additionalfields.length() && i < additionalvalues.length(); i++ ) {
+        ui->addfields->setItem(i, 0, new QTableWidgetItem(additionalfields[i]));
         ui->addfields->setItem(i, 1, new QTableWidgetItem(additionalvalues[i]));
     }
 }
 
 void Settings::getfld() {
-    QTableWidgetItem *it;
-    for ( int i = 0; i < NRADIFIELDS; i++ ) {
-        it = ui->addfields->item(i,1);
-        QString txt = it->text();
-        additionalvalues[i] = txt.toLocal8Bit();
+    QTableWidgetItem *itf;
+    QTableWidgetItem *itv;
+
+    additionalfields.resize(0);
+    additionalvalues.resize(0);
+
+    for ( int i = 0; i < ui->addfields->rowCount(); i++ ) {
+        itf = ui->addfields->item(i,0);
+        if ( itf ) {
+            QString txtf = itf->text();
+            additionalfields.append(txtf.toLocal8Bit());
+        }
+
+        itv = ui->addfields->item(i,1);
+        if ( itv ) {
+            QString txtv = itv->text();
+            additionalvalues.append(txtv.toLocal8Bit());
+        }
     }
 }
 
@@ -61,15 +87,18 @@ bool getconf() {
     browser = conf.value("browser", "firefox").toString();
     browserargs = conf.value("browserargs", "").toString();
     mygrid = conf.value("mygrid", "AA00").toString();
+    // QStringLists.remove() seems to have a problem, so...
+    additionalfields.resize(0);
+    QStringList tmpf = conf.value("additionalfields").toStringList();
+    additionalvalues.resize(0);
+    QStringList tmpv = conf.value("additionalvalues").toStringList();
+    for ( int i = 0; i < tmpf.length(); i++ ) {
+        if ( tmpf[i].length() > 0 ) {
+            additionalfields.append(tmpf[i]);
+            additionalvalues.append(tmpv[i]);
+        }
+    }
 
-    QStringList tmp = conf.value("additionalvalues", additionalvalues).toStringList();
-    if ( tmp.length() == additionalvalues.length() ) {
-        additionalvalues = tmp;
-    }
-    else {
-        QMessageBox msgBox(QMessageBox::Information, "Read Settings", "Additional ADIF Fields are lost because of Change", QMessageBox::Ok);
-        msgBox.exec();
-    }
     return true;
 }
 
@@ -120,7 +149,19 @@ void Settings::on_bokcancel_accepted() {
     conf.setValue("browserargs", browserargs);
 
     getfld();
-    conf.setValue("additionalvalues", additionalvalues);
+
+    // shrink when no value given
+    QStringList tmpf;
+    QStringList tmpv;
+    for ( int i = 0; i < additionalvalues.length(); i++ ) {
+        if ( additionalvalues[i].length() > 0 ) {
+            tmpf.append(additionalfields[i]);
+            tmpv.append(additionalvalues[i]);
+        }
+    }
+    conf.setValue("additionalfields", tmpf);
+    conf.setValue("additionalvalues", tmpv);
+
 
     conf.setValue("dontaskfordelete", (ui->dontaskfordelete->isChecked()?1:0) );
     conf.setValue("dbbackup", (ui->backupdb->isChecked()?1:0) );

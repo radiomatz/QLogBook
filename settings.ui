@@ -282,7 +282,7 @@
     </rect>
    </property>
    <property name="columnCount">
-    <number>4</number>
+    <number>2</number>
    </property>
    <column>
     <property name="text">
@@ -300,8 +300,6 @@
      <string>Value</string>
     </property>
    </column>
-   <column/>
-   <column/>
   </widget>
   <widget class="QCheckBox" name="dontaskfordelete">
    <property name="geometry">

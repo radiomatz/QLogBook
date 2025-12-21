@@ -221,7 +221,7 @@ int write_adif_record() {
         adi.f[imode] + "');\n";
     doquery(ssql);
     doquery("update tnr set nr = last_insert_rowid();\n");
-    for ( int i = 0; i < NRADIFIELDS; i++ ) {
+    for ( int i = 0; i < adif_fields.length(); i++ ) {
         if ( adi.f[i].length() > 0 ) {
             ;
             if ( adif_fields.at(i).startsWith("time_", Qt::CaseInsensitive) &&
@@ -236,7 +236,7 @@ int write_adif_record() {
         }
     }
 
-// TODO? Fill additional Fields???
+// TODO? Fill additional Fields from settings ??? i am not sure if this is a good idea.
 
     doquery("commit transaction;\n");
 
@@ -246,10 +246,16 @@ int write_adif_record() {
 
 // find a field called char *what in already filled ADI Structure
 int find_adif_field(const char *what) {
-    for ( int i = 0; i < NRADIFIELDS; i++ )
+    for ( int i = 0; i < adif_fields.length(); i++ )
         if ( !adif_fields[i].compare(what, Qt::CaseInsensitive) )
             return(i);
-    return(-1);
+/*
+ * nothing found: simply add field=value
+ * sqlite does not really have types.
+ */
+    adi.f.append("");
+    adif_fields.append(what);
+    return(adif_fields.length());
 }
 
 

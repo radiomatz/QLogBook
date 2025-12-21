@@ -10,7 +10,7 @@ mListe::mListe(QObject *parent)
 
 int mListe::rowCount(const QModelIndex & /*parent*/) const
 {
-    return NRADIFIELDS;
+    return adif_fields.length();
 }
 
 int mListe::columnCount(const QModelIndex & /*parent*/) const
