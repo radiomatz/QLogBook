@@ -82,8 +82,8 @@ bool getconf() {
     dbpath = conf.value("dbpath", dbpath).toString();
     exportpath = conf.value("exportpath", exportpath).toString();
     mycall = conf.value("mycall", mycall).toString();
-    host = conf.value("host", "").toString();
-    port = conf.value("port", 0).toInt();
+    host = conf.value("host", "localhost").toString();
+    port = conf.value("port", 4532).toInt();
     browser = conf.value("browser", "firefox").toString();
     browserargs = conf.value("browserargs", "").toString();
     mygrid = conf.value("mygrid", "AA00").toString();
