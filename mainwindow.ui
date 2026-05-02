@@ -2452,7 +2452,6 @@
     <addaction name="actionImport_ADIF"/>
     <addaction name="actionExport_ADIF"/>
     <addaction name="actionExport_CABRILLO"/>
-    <addaction name="actionExport_QRZ"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>

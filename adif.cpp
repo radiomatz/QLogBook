@@ -175,9 +175,12 @@ void fill_adif_record(char *f, char *v)  {
         }
     }
 //    messages(MSG_WARN, "App does not know adif field", f, 0);
+/*
+ * since find_adif_field automatically adds the new field, this is obsolete:
     QMessageBox msgbox( QMessageBox::Critical, "Unknown ADIF TAG!",
            QString("App does not know adif field:%1, value:%2, PLEASE INFORM THE DEVTEAM of this APP!").arg(f).arg(v));
     msgbox.exec();
+*/
 }
 
 

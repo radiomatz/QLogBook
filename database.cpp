@@ -677,7 +677,7 @@ QString export_qrz(QItemSelectionModel *select) {
     QString ret = "";
     QModelIndexList range = select->selectedRows(); // return selected row(s)
     for(int i = 0; i < range.length(); i++) {
-        ret += qrz_record(range.at(i).data().toInt() );
+        ret += " " + qrz_record(range.at(i).data().toInt() );
     }
     return(ret);
 }
