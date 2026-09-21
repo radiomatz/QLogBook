@@ -22,11 +22,11 @@
 #include <QStringList>
 #include <qobject.h>
 
-#include "callfield.h"
+// #include "callfield.h"
 #include "cabrilloheader.h"
 #include "ui_cabrilloheader.h"
 #include "bands.cpp"
-#include "grids.h"
+// #include "grids.h"
 
 extern QString ADIFVER;
 
@@ -140,14 +140,17 @@ bool generate_qsodetaillist(MainWindow *parent, int nr) {
     tvd->setModel(mtvd);
     // Make all the columns except the third(value) read only
     for(int i = 0; i < mtvd->columnCount(); i++) {
-        if(i != 2)
+        if(i != 2) // dont let the fieldnames be edited
             tvd->setItemDelegateForColumn(i, new NotEditableDelegate(tvd));
-//        else
-//            tvd->setItemDelegateForColumn(i, new MyItemDelegate(tvd));
+        else // Column # 3, index 2 := value, we make our own editor ?
+            tvd->setItemDelegateForColumn(i, new MyItemDelegate(tvd));
     }
     tvd->hideColumn(0); // don't show the ID
-    tvd->resizeColumnsToContents();
-
+//    tvd->resizeColumnsToContents();
+    tvd->resizeColumnToContents(1);
+    int b = tvd->columnWidth(1);
+    int bb = tvd->width();
+    tvd->setColumnWidth(2, bb - b - 30);
     tvd->show();
 
     return true;

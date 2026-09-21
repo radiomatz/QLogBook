@@ -103,13 +103,24 @@ void MainWindow::sigmode(QString m) {
  * QSO List
  */
 void MainWindow::showdistance(void) {
+    // if found "gridsquare" in qso ...
     int rg = findrow("gridsquare");
     QString mdh;
     if ( rg >= 0 )
         mdh = mtvd->index(rg, 2).data().toString();
     if ( mdh.length() >= 4 ) {
         float lon, lat, mylon, mylat;
-        grids_maidenhead2latlon(mygrid, &mylat, &mylon);
+        // if we were out of home, then possibly there is a "my_gridsquare" in our adif
+        int ryg = findrow("my_gridsquare");
+        QString mydh = "";
+        if ( ryg >= 0 )
+            mydh = mtvd->index(ryg, 2).data().toString();
+        if ( mydh.length() >= 4 ) {
+            grids_maidenhead2latlon(mydh, &mylat, &mylon);
+        } else {
+            // else we take our location from menu above
+            grids_maidenhead2latlon(mygrid, &mylat, &mylon);
+        }
         grids_maidenhead2latlon(mdh, &lat, &lon);
         int dist = grids_dist(mylat, mylon, lat, lon);
         // qDebug() << "Call:" << mtvd->index(ic, 2).data().toString() << "Loc:" << mdh << "Dist:" << dist << "lat:" << lat << "lon:" << lon;

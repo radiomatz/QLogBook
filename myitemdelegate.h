@@ -9,11 +9,15 @@
 #include <QModelIndex>
 #include <QWidget>
 #include <QEvent>
+#include <QString>
+
+
 
 class MyItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
 public:
     explicit MyItemDelegate(QObject *parent = nullptr);
+
 
 protected:
 
