@@ -1,7 +1,7 @@
 #ifndef QLOGBOOK_H
 
 #define MY_PROG "QLogBook"
-#define MY_VERSION "0.2.4"
+#define MY_VERSION "0.2.5"
 #define MY_ORG "DM2HR"
 #define MY_DOMAIN "dm2hr.hmro.de"
 

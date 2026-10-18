@@ -389,14 +389,15 @@ bool adif_header(QFile *f) {
             "<programversion:5>" + MY_VERSION + "\n" +
             "<userdef0:8:S>OBSOLETE\n"
             "<eoh>\n";
-//    qDebug() << header;
+//    qDebug() << "Adif-Header:" << header;
     f->write(header.toLocal8Bit(),header.length());
     return(true);
 }
 
 bool adif_footer(QFile *f) {
     QString foot = "\n\n";
-    // qDebug() << foot;
+//    qDebug() << "Adif-Footer:" << foot;
+//    qDebug() << foot;
     f->write(foot.toLocal8Bit(),foot.length());
     return(true);
 }
@@ -423,6 +424,7 @@ bool adif_record(QFile *f, int qsonr) {
         }
     }
     adiftags.append("<eor>\n");
+//    qDebug() << "Adif-Recs:" << adiftags;
 //    qDebug() << "qsonr:" << qsonr << adiftags;
     f->write(adiftags.toLocal8Bit(), adiftags.length());
     return(true);
@@ -447,6 +449,7 @@ bool export_adif(QFile *fi) {
         adif_record(fi, range.at(i).data().toInt() );
     }
     adif_footer(fi);
+    fi->aboutToClose();
     fi->close();
     return true;
 }
@@ -485,8 +488,7 @@ ADDRESS-COUNTRY: " + ch->uip->country->text() + "\n\
 OFFTIME: " + ch->uip->offtime->text() + "\n\
 SOAPBOX: " + ch->uip->soapbox->toPlainText() + "\n");
     // qDebug() << header;
-    f->write(header.toLocal8Bit(), header.length());
-    f->write("\n", 1);
+    f->write(header.toLocal8Bit(), header.toLocal8Bit().length());
     return(true);
 }
 
@@ -584,6 +586,7 @@ bool export_cabrillo(QFile *fi, cabrilloheader *ch) {
         cabrillo_record(fi, range.at(i).data().toInt() );
     }
     cabrillo_footer(fi);
+    fi->aboutToClose();
     fi->close();
     return true;
 }
