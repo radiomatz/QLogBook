@@ -1,6 +1,8 @@
 #include "mliste.h"
 #include "QLogBook.h"
 
+// Adapter for Adif Field Names List
+
 mListe::mListe(QObject *parent)
     : QAbstractTableModel{parent} {
 

@@ -1,7 +1,7 @@
 #ifndef QLOGBOOK_H
 
 #define MY_PROG "QLogBook"
-#define MY_VERSION "0.2.0"
+#define MY_VERSION "0.2.4"
 #define MY_ORG "DM2HR"
 #define MY_DOMAIN "dm2hr.hmro.de"
 
@@ -61,6 +61,8 @@ struct ADIFRECORD {
 };
 typedef struct ADIFRECORD ADI;
 extern ADI adi;
+
+#define MODELIST {"AM", "ARDOP", "ATV", "CHIP", "CLO", "CONTESTI", "CW", "DIGITALVOICE", "DOMINO", "DYNAMIC", "FAX", "FM", "FSK441", "FT8", "HELL", "ISCAT", "JT4", "JT6M", "JT9", "JT44", "JT65", "MFSK", "MSK144", "MT63", "OLIVIA", "OPERA", "PAC", "PAX", "PKT", "PSK", "PSK2K", "Q15", "QRA64", "ROS", "RTTY", "RTTYM", "SSB", "SSTV", "T10", "THOR", "THRB", "TOR", "V4", "VOI", "WINMOR", "WSPR"}
 
 int import_adif(char *filename);
 bool export_adif(QFile *fi);

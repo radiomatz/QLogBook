@@ -1,3 +1,5 @@
+#include "QLogBook.h"
+
 struct sbands band[] = {
     { "2190m" , 0.1357 , 0.1378 },
     { "630m" , 0.472 , 0.479 },

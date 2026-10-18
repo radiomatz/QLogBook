@@ -82,7 +82,7 @@ bool open_db() {
 
 bool update_fields() {
     uip->mycall->setText(mycall);
-    QStringList modes = {"AM", "ARDOP", "ATV", "CHIP", "CLO", "CONTESTI", "CW", "DIGITALVOICE", "DOMINO", "DYNAMIC", "FAX", "FM", "FSK441", "FT8", "HELL", "ISCAT", "JT4", "JT6M", "JT9", "JT44", "JT65", "MFSK", "MSK144", "MT63", "OLIVIA", "OPERA", "PAC", "PAX", "PKT", "PSK", "PSK2K", "Q15", "QRA64", "ROS", "RTTY", "RTTYM", "SSB", "SSTV", "T10", "THOR", "THRB", "TOR", "V4", "VOI", "WINMOR", "WSPR"};
+    QStringList modes = MODELIST;
     QComboBox *cmode = uip->cmode;
     cmode->addItems(modes);
     cmode->setCurrentIndex(cmode->findText("SSB"));
@@ -486,6 +486,7 @@ OFFTIME: " + ch->uip->offtime->text() + "\n\
 SOAPBOX: " + ch->uip->soapbox->toPlainText() + "\n");
     // qDebug() << header;
     f->write(header.toLocal8Bit(), header.length());
+    f->write("\n", 1);
     return(true);
 }
 
