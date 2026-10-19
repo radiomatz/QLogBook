@@ -390,7 +390,7 @@ bool adif_header(QFile *f) {
             "<userdef0:8:S>OBSOLETE\n"
             "<eoh>\n";
 //    qDebug() << "Adif-Header:" << header;
-    f->write(header.toLocal8Bit(),header.length());
+    f->write(header.toLocal8Bit(),header.toLocal8Bit().length());
     return(true);
 }
 
@@ -398,7 +398,7 @@ bool adif_footer(QFile *f) {
     QString foot = "\n\n";
 //    qDebug() << "Adif-Footer:" << foot;
 //    qDebug() << foot;
-    f->write(foot.toLocal8Bit(),foot.length());
+    f->write(foot.toLocal8Bit(),foot.toLocal8Bit().length());
     return(true);
 }
 
@@ -426,7 +426,7 @@ bool adif_record(QFile *f, int qsonr) {
     adiftags.append("<eor>\n");
 //    qDebug() << "Adif-Recs:" << adiftags;
 //    qDebug() << "qsonr:" << qsonr << adiftags;
-    f->write(adiftags.toLocal8Bit(), adiftags.length());
+    f->write(adiftags.toLocal8Bit(), adiftags.toLocal8Bit().length());
     return(true);
 }
 
@@ -495,7 +495,7 @@ SOAPBOX: " + ch->uip->soapbox->toPlainText() + "\n");
 bool cabrillo_footer(QFile *f) {
     QString foot = "END-OF-LOG:\n";
     // qDebug() << foot;
-    f->write(foot.toLocal8Bit(),foot.length());
+    f->write(foot.toLocal8Bit(),foot.toLocal8Bit().length());
     return(true);
 }
 
@@ -563,7 +563,7 @@ bool cabrillo_record(QFile *f, int qsonr) {
     }
     cabritags.append("\n");
     // qDebug() << cabritags;
-    f->write(cabritags.toLocal8Bit(), cabritags.length());
+    f->write(cabritags.toLocal8Bit(), cabritags.toLocal8Bit().length());
     return(true);
 }
 
